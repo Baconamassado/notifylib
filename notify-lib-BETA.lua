@@ -11,12 +11,24 @@ function Notify:CreateNotification(properties)
     local frame = Instance.new("Frame")
     frame.Name = "Notification"
     frame.Size = UDim2.new(0, 300, 0, 60)
-    frame.Position = UDim2.new(0.5, 0, -0.1, 0) -- Começa fora da tela
     frame.AnchorPoint = Vector2.new(0.5, 0)
     frame.BackgroundColor3 = properties.BackgroundColor3 or Color3.fromRGB(45, 45, 45)
     frame.BackgroundTransparency = properties.BackgroundTransparency or 0.3
     frame.BorderSizePixel = 0
     frame.Parent = screenGui
+
+    local position = properties.Position or "Padrão"
+    if position == "Normal" then
+        frame.Position = UDim2.new(0.5, 0, -0.1, 0)
+    elseif position == "Top" then
+        frame.Position = UDim2.new(0.5, 0, 0.05, 0) -- topo da tela
+    elseif position == "BottomRight" then
+        frame.Position = UDim2.new(0.95, 0, 0.9, 0) -- Canto inferior direito
+        frame.AnchorPoint = Vector2.new(1, 1)
+    else
+        warn("Posição inválida! Usando posição padrão.")
+        frame.Position = UDim2.new(0.5, 0, -0.1, 0)
+    end
 
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 8)
@@ -49,7 +61,7 @@ function Notify:CreateNotification(properties)
     textLabel.Parent = frame
 
     frame:TweenPosition(
-        UDim2.new(0.5, 0, 0.1, 0), 
+        frame.Position + UDim2.new(0, 0, 0.1, 0),
         Enum.EasingDirection.Out, 
         Enum.EasingStyle.Quad, 
         0.5, 
@@ -59,7 +71,7 @@ function Notify:CreateNotification(properties)
 
     delay(properties.Duration or 3, function()
         frame:TweenPosition(
-            UDim2.new(0.5, 0, -0.1, 0), 
+            frame.Position - UDim2.new(0, 0, 0.1, 0),
             Enum.EasingDirection.In, 
             Enum.EasingStyle.Quad, 
             0.5, 
