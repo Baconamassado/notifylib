@@ -8,7 +8,6 @@ function Notify:CreateNotification(properties)
     screenGui.Name = "NotifySystem"
     screenGui.Parent = playerGui
 
-    -- Define a posição baseada no argumento passado
     local positionPresets = {
         BottomRight = UDim2.new(1, -310, 1, -70),
         BottomLeft = UDim2.new(0, 10, 1, -70),
@@ -25,27 +24,47 @@ function Notify:CreateNotification(properties)
     frame.Size = UDim2.new(0, 300, 0, 60)
     frame.Position = startPosition
     frame.AnchorPoint = Vector2.new(0.5, 0)
-    frame.BackgroundColor3 = properties.BackgroundColor3 or Color3.fromRGB(45, 45, 45)
-    frame.BackgroundTransparency = properties.BackgroundTransparency or 0.3
     frame.BorderSizePixel = 0
     frame.Parent = screenGui
+
+    -- tema
+    local theme = properties.Theme or "Default" -- Default, Hell Menu, Hyper Infinity
+    local backgroundTransparency = properties.BackgroundTransparency or 0.3
+    local backgroundColor = properties.BackgroundColor3 or Color3.fromRGB(45, 45, 45)
+
+    -- Aplica estilos de tema
+    if theme == "Hell Menu" then
+        backgroundColor = Color3.fromRGB(0, 0, 0) -- Fundo preto
+        backgroundTransparency = 0
+        local gradient = Instance.new("UIGradient")
+        gradient.Rotation = (properties.Position or "BottomRight"):match("Bottom") and 270 or 90
+        gradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)), -- Vermelho
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)), -- Preto
+        })
+        gradient.Parent = frame
+    elseif theme == "Hyper Infinity" then
+        backgroundColor = Color3.fromRGB(0, 0, 0)
+        backgroundTransparency = 0.4 -- Transparente
+        local gradient = Instance.new("UIGradient")
+        gradient.Rotation = (properties.Position or "BottomRight"):match("Bottom") and 270 or 90
+        gradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 255)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
+        })
+        gradient.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0),
+            NumberSequenceKeypoint.new(1, 1),
+        })
+        gradient.Parent = frame
+    end
+
+    frame.BackgroundColor3 = backgroundColor
+    frame.BackgroundTransparency = backgroundTransparency
 
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = frame
-
-    local shadow = Instance.new("Frame")
-    shadow.Name = "Shadow"
-    shadow.Size = frame.Size + UDim2.new(0, 6, 0, 6)
-    shadow.Position = startPosition + UDim2.new(0, 3, 0, 3)
-    shadow.AnchorPoint = frame.AnchorPoint
-    shadow.BackgroundColor3 = Color3.new(0, 0, 0)
-    shadow.BackgroundTransparency = 0.8
-    shadow.BorderSizePixel = 0
-    shadow.Parent = screenGui
-    local shadowCorner = Instance.new("UICorner")
-    shadowCorner.CornerRadius = corner.CornerRadius
-    shadowCorner.Parent = shadow
 
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "NotificationText"
@@ -67,13 +86,6 @@ function Notify:CreateNotification(properties)
         0.5,
         true
     )
-    shadow:TweenPosition(
-        endPosition + UDim2.new(0, 3, 0, 3),
-        Enum.EasingDirection.Out,
-        Enum.EasingStyle.Quad,
-        0.5,
-        true
-    )
 
     delay(properties.Duration or 3, function()
         frame:TweenPosition(
@@ -85,13 +97,6 @@ function Notify:CreateNotification(properties)
             function()
                 screenGui:Destroy()
             end
-        )
-        shadow:TweenPosition(
-            startPosition + UDim2.new(0, 3, 0, 3),
-            Enum.EasingDirection.In,
-            Enum.EasingStyle.Quad,
-            0.5,
-            true
         )
     end)
 end
