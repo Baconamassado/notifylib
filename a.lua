@@ -1,4 +1,3 @@
--- Notify Library
 local Notify = {}
 
 function Notify:CreateNotification(properties)
@@ -21,9 +20,9 @@ function Notify:CreateNotification(properties)
     if position == "Padrão" then
         frame.Position = UDim2.new(0.5, 0, -0.1, 0)
     elseif position == "Top" then
-        frame.Position = UDim2.new(0.5, 0, 0.05, 0) -- topo da tela
+        frame.Position = UDim2.new(0.5, 0, 0.05, 0)
     elseif position == "BottomRight" then
-        frame.Position = UDim2.new(0.95, 0, 0.9, 0) -- Canto inferior direito
+        frame.Position = UDim2.new(1.1, 0, 0.9, 0)
         frame.AnchorPoint = Vector2.new(1, 1)
     else
         warn("Posição inválida! Usando posição padrão.")
@@ -61,7 +60,7 @@ function Notify:CreateNotification(properties)
     textLabel.Parent = frame
 
     frame:TweenPosition(
-        frame.Position + UDim2.new(0, 0, 0.1, 0),
+        UDim2.new(0.95, 0, 0.9, 0),
         Enum.EasingDirection.Out, 
         Enum.EasingStyle.Quad, 
         0.5, 
