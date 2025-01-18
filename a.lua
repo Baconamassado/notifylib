@@ -18,7 +18,7 @@ function Notify:CreateNotification(properties)
     frame.Parent = screenGui
 
     local position = properties.Position or "Padrão"
-    if position == "Normal" then
+    if position == "Padrão" then
         frame.Position = UDim2.new(0.5, 0, -0.1, 0)
     elseif position == "Top" then
         frame.Position = UDim2.new(0.5, 0, 0.05, 0) -- topo da tela
@@ -70,17 +70,31 @@ function Notify:CreateNotification(properties)
     shadow:TweenPosition(frame.Position, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
 
     delay(properties.Duration or 3, function()
-        frame:TweenPosition(
-            frame.Position - UDim2.new(0, 0, 0.1, 0),
-            Enum.EasingDirection.In, 
-            Enum.EasingStyle.Quad, 
-            0.5, 
-            true,
-            function()
-                screenGui:Destroy()
-            end
-        )
-        shadow:TweenPosition(frame.Position, Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.5, true)
+        if position == "BottomRight" then
+            frame:TweenPosition(
+                UDim2.new(1.1, 0, 0.9, 0),
+                Enum.EasingDirection.In, 
+                Enum.EasingStyle.Quad, 
+                0.5, 
+                true,
+                function()
+                    screenGui:Destroy()
+                end
+            )
+            shadow:TweenPosition(frame.Position, Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.5, true)
+        else
+            frame:TweenPosition(
+                frame.Position - UDim2.new(0, 0, 0.1, 0),
+                Enum.EasingDirection.In, 
+                Enum.EasingStyle.Quad, 
+                0.5, 
+                true,
+                function()
+                    screenGui:Destroy()
+                end
+            )
+            shadow:TweenPosition(frame.Position, Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.5, true)
+        end
     end)
 end
 
